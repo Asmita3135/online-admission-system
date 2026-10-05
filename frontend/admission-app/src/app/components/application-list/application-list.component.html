@@ -1,0 +1,115 @@
+<div class="admin-container">
+  <div class="admin-card">
+    <div class="admin-header">
+      <h2>Applications</h2>
+    </div>
+
+    <!-- Filter Bar (Visible when data loads successfully) -->
+    <div *ngIf="!isLoading && !errorMessage && applications.length > 0" class="filter-card">
+      <div class="filter-row">
+        <!-- Search Input -->
+        <div class="filter-group search-group">
+          <label for="search">Search</label>
+          <input
+            type="text"
+            id="search"
+            [(ngModel)]="searchTerm"
+            placeholder="Search by name or email"
+            class="filter-input"
+          />
+        </div>
+
+        <!-- Department Filter -->
+        <div class="filter-group">
+          <label for="departmentFilter">Department</label>
+          <select id="departmentFilter" [(ngModel)]="selectedDepartment" class="filter-select">
+            <option value="ALL">All Departments</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="IT">IT</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-group">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter" [(ngModel)]="selectedStatus" class="filter-select">
+            <option value="ALL">All Statuses</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Review">Review</option>
+            <option value="Selected">Selected</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="filter-group filter-actions">
+          <button (click)="clearFilters()" class="btn btn-secondary">Clear Filters</button>
+        </div>
+      </div>
+
+      <!-- Result Count Bar -->
+      <div class="results-count">
+        Showing <strong>{{ filteredApplications.length }}</strong> of <strong>{{ applications.length }}</strong> application(s)
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading applications...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!isLoading && errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Empty Backend State (No applications stored at all) -->
+    <div *ngIf="!isLoading && !errorMessage && applications.length === 0" class="empty-state">
+      <p>No applications found in the database.</p>
+    </div>
+
+    <!-- Filtered Empty State (Applications exist but filters yield 0 results) -->
+    <div *ngIf="!isLoading && !errorMessage && applications.length > 0 && filteredApplications.length === 0" class="empty-state">
+      <p class="empty-msg">No applications match your filters.</p>
+      <button (click)="clearFilters()" class="btn btn-outline">Reset Search & Filters</button>
+    </div>
+
+    <!-- Applications Table -->
+    <div *ngIf="!isLoading && !errorMessage && filteredApplications.length > 0" class="table-responsive">
+      <table class="applications-table">
+        <thead>
+          <tr>
+            <th>Applicant Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Marks</th>
+            <th>Status</th>
+            <th>Application Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of filteredApplications">
+            <td class="font-bold">{{ app.name }}</td>
+            <td>{{ app.email }}</td>
+            <td>{{ app.phone }}</td>
+            <td><span class="badge dept-badge">{{ app.department }}</span></td>
+            <td>{{ app.marks }}%</td>
+            <td>
+              <span class="badge status-badge" [ngClass]="app.status.toLowerCase()">
+                {{ app.status }}
+              </span>
+            </td>
+            <td>{{ app.createdAt | date:'mediumDate' }}</td>
+            <td>
+              <a [routerLink]="['/admin', app._id]" class="btn btn-sm btn-outline">View</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

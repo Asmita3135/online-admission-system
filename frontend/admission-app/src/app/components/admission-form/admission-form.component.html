@@ -1,0 +1,172 @@
+<div class="form-container">
+  <div class="form-card">
+    <h2 class="form-title">Online Admission Application</h2>
+    <p class="form-subtitle">Please fill out all required fields to submit your admission application.</p>
+
+    <!-- Success Alert -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <div class="alert-title">Application Submitted Successfully!</div>
+      <p>{{ successMessage }}</p>
+      <div *ngIf="submittedApplicationId" class="application-id-box">
+        Application ID: <strong>{{ submittedApplicationId }}</strong>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="admissionForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="name">Full Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="(admissionForm.get('name')?.invalid && (admissionForm.get('name')?.touched || formSubmitted))"
+          placeholder="Enter your full name"
+        />
+        <div *ngIf="admissionForm.get('name')?.invalid && (admissionForm.get('name')?.touched || formSubmitted)" class="error-msg">
+          <small *ngIf="admissionForm.get('name')?.errors?.['required']">Please enter your full name.</small>
+          <small *ngIf="admissionForm.get('name')?.errors?.['minlength']">Full name must be at least 2 characters.</small>
+        </div>
+      </div>
+
+      <!-- Email & Phone Grid -->
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="(admissionForm.get('email')?.invalid && (admissionForm.get('email')?.touched || formSubmitted))"
+            placeholder="e.g. applicant@example.com"
+          />
+          <div *ngIf="admissionForm.get('email')?.invalid && (admissionForm.get('email')?.touched || formSubmitted)" class="error-msg">
+            <small *ngIf="admissionForm.get('email')?.errors?.['required']">Please enter your email address.</small>
+            <small *ngIf="admissionForm.get('email')?.errors?.['email']">Please enter a valid email address.</small>
+          </div>
+        </div>
+
+        <div class="form-group col">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <input
+            type="text"
+            id="phone"
+            formControlName="phone"
+            class="form-control"
+            [class.is-invalid]="(admissionForm.get('phone')?.invalid && (admissionForm.get('phone')?.touched || formSubmitted))"
+            placeholder="e.g. 9876543210"
+          />
+          <div *ngIf="admissionForm.get('phone')?.invalid && (admissionForm.get('phone')?.touched || formSubmitted)" class="error-msg">
+            <small *ngIf="admissionForm.get('phone')?.errors?.['required']">Please enter your phone number.</small>
+            <small *ngIf="admissionForm.get('phone')?.errors?.['pattern']">Phone number must contain 10 to 15 digits.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date of Birth & Department Grid -->
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+          <input
+            type="date"
+            id="dateOfBirth"
+            formControlName="dateOfBirth"
+            class="form-control"
+            [class.is-invalid]="(admissionForm.get('dateOfBirth')?.invalid && (admissionForm.get('dateOfBirth')?.touched || formSubmitted))"
+          />
+          <div *ngIf="admissionForm.get('dateOfBirth')?.invalid && (admissionForm.get('dateOfBirth')?.touched || formSubmitted)" class="error-msg">
+            <small *ngIf="admissionForm.get('dateOfBirth')?.errors?.['required']">Please enter your date of birth.</small>
+            <small *ngIf="admissionForm.get('dateOfBirth')?.errors?.['notInPast']">Date of birth must be a past date.</small>
+          </div>
+        </div>
+
+        <div class="form-group col">
+          <label for="department">Department <span class="required">*</span></label>
+          <select
+            id="department"
+            formControlName="department"
+            class="form-control"
+            [class.is-invalid]="(admissionForm.get('department')?.invalid && (admissionForm.get('department')?.touched || formSubmitted))"
+          >
+            <option value="" disabled>-- Select Department --</option>
+            <option value="CSE">Computer Science & Engineering (CSE)</option>
+            <option value="ECE">Electronics & Communication (ECE)</option>
+            <option value="IT">Information Technology (IT)</option>
+          </select>
+          <div *ngIf="admissionForm.get('department')?.invalid && (admissionForm.get('department')?.touched || formSubmitted)" class="error-msg">
+            <small>Please select a department.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marks -->
+      <div class="form-group">
+        <label for="marks">Marks / Percentage (%) <span class="required">*</span></label>
+        <input
+          type="number"
+          id="marks"
+          formControlName="marks"
+          class="form-control"
+          [class.is-invalid]="(admissionForm.get('marks')?.invalid && (admissionForm.get('marks')?.touched || formSubmitted))"
+          placeholder="Enter marks between 0 and 100"
+          min="0"
+          max="100"
+        />
+        <div *ngIf="admissionForm.get('marks')?.invalid && (admissionForm.get('marks')?.touched || formSubmitted)" class="error-msg">
+          <small *ngIf="admissionForm.get('marks')?.errors?.['required']">Please enter your marks/percentage.</small>
+          <small *ngIf="admissionForm.get('marks')?.errors?.['min'] || admissionForm.get('marks')?.errors?.['max']">Marks must be between 0 and 100.</small>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address">Address <span class="required">*</span></label>
+        <textarea
+          id="address"
+          formControlName="address"
+          class="form-control"
+          rows="3"
+          [class.is-invalid]="(admissionForm.get('address')?.invalid && (admissionForm.get('address')?.touched || formSubmitted))"
+          placeholder="Enter your full residential address"
+        ></textarea>
+        <div *ngIf="admissionForm.get('address')?.invalid && (admissionForm.get('address')?.touched || formSubmitted)" class="error-msg">
+          <small>Please enter your address.</small>
+        </div>
+      </div>
+
+      <!-- Marksheet Document Upload -->
+      <div class="form-group">
+        <label for="document">Marksheet Document <span class="required">*</span></label>
+        <input
+          type="file"
+          id="document"
+          (change)="onFileChange($event)"
+          class="form-control-file"
+          accept=".pdf,.jpg,.jpeg,.png"
+        />
+        <div class="file-hint">Allowed formats: PDF, JPG, JPEG, PNG (Max 5 MB)</div>
+        <div *ngIf="selectedFile" class="selected-file-info">
+          Selected File: <strong>{{ selectedFile.name }}</strong> ({{ (selectedFile.size / 1024 / 1024) | number:'1.2-2' }} MB)
+        </div>
+        <div *ngIf="fileError" class="error-msg">
+          <small>{{ fileError }}</small>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Submit Application</span>
+          <span *ngIf="isSubmitting">Submitting application...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="details-container">
+  <!-- Back Link -->
+  <div class="nav-back">
+    <a routerLink="/admin" class="btn btn-back">← Back to Applications</a>
+  </div>
+
+  <div class="details-card">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading application details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!isLoading && errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Application Details Card Content -->
+    <div *ngIf="!isLoading && !errorMessage && application">
+      <div class="details-header">
+        <h2>Application Details</h2>
+        <span class="badge status-badge" [ngClass]="application.status.toLowerCase()">
+          {{ application.status }}
+        </span>
+      </div>
+
+      <!-- Applicant Info Grid -->
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Applicant Name</label>
+          <div class="info-value font-bold">{{ application.name }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Email Address</label>
+          <div class="info-value">{{ application.email }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Phone Number</label>
+          <div class="info-value">{{ application.phone }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Date of Birth</label>
+          <div class="info-value">{{ application.dateOfBirth | date:'mediumDate' }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Department</label>
+          <div class="info-value"><span class="badge dept-badge">{{ application.department }}</span></div>
+        </div>
+
+        <div class="info-item">
+          <label>Marks / Percentage</label>
+          <div class="info-value">{{ application.marks }}%</div>
+        </div>
+
+        <div class="info-item full-width">
+          <label>Address</label>
+          <div class="info-value">{{ application.address }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Application Date</label>
+          <div class="info-value">{{ application.createdAt | date:'medium' }}</div>
+        </div>
+
+        <div class="info-item">
+          <label>Uploaded Document</label>
+          <div class="info-value">{{ application.documentName }}</div>
+        </div>
+      </div>
+
+      <!-- Marksheet Document Action -->
+      <div class="document-section">
+        <a [href]="getDocumentUrl()" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-document">
+          📄 View Marksheet Document
+        </a>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Status Update Section -->
+      <div class="status-section">
+        <h3>Update Application Status</h3>
+
+        <div *ngIf="updateSuccessMessage" class="alert alert-success">
+          {{ updateSuccessMessage }}
+        </div>
+
+        <div *ngIf="updateErrorMessage" class="alert alert-danger">
+          {{ updateErrorMessage }}
+        </div>
+
+        <div class="status-form-row">
+          <select [(ngModel)]="selectedStatus" class="status-select">
+            <option value="Submitted">Submitted</option>
+            <option value="Review">Review</option>
+            <option value="Selected">Selected</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+
+          <button (click)="updateStatus()" class="btn btn-success" [disabled]="isUpdating">
+            <span *ngIf="!isUpdating">Update Status</span>
+            <span *ngIf="isUpdating">Updating...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+backend/node_modules/
+
+# Environment files
+.env
+backend/.env
+
+# Uploaded files (keep .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Operating System files
+.DS_Store
+Thumbs.db
